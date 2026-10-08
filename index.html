@@ -1,0 +1,6396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SkyDrive</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #05080d;
+    color: white;
+    overflow-x: hidden;
+}
+
+/* =========================
+   APP
+========================= */
+
+.app {
+    max-width: 430px;
+    min-height: 100vh;
+    margin: auto;
+    background: #080d14;
+    position: relative;
+    padding-bottom: 90px;
+}
+
+/* =========================
+   TOP BAR
+========================= */
+
+.topbar {
+    height: 75px;
+    padding: 15px 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: rgba(8,13,20,0.95);
+    border-bottom: 1px solid #1c2b3a;
+
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-circle {
+    width: 43px;
+    height: 43px;
+
+    border-radius: 13px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #101c29;
+    border: 1px solid #258dce;
+
+    font-size: 22px;
+
+    box-shadow: 0 0 20px #1688ff33;
+}
+
+.logo-text h1 {
+    font-size: 19px;
+    letter-spacing: 2px;
+}
+
+.logo-text p {
+    font-size: 9px;
+    color: #71869a;
+    margin-top: 3px;
+}
+
+.connection {
+    font-size: 10px;
+    color: #4ee0a0;
+
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.connection-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #4ee0a0;
+    box-shadow: 0 0 8px #4ee0a0;
+}
+
+/* =========================
+   MAP
+========================= */
+
+.map-container {
+    height: 380px;
+    position: relative;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent 48%,
+            #1b2935 49%,
+            #1b2935 51%,
+            transparent 52%
+        ),
+        linear-gradient(
+            0deg,
+            transparent 48%,
+            #1b2935 49%,
+            #1b2935 51%,
+            transparent 52%
+        ),
+        #101821;
+}
+
+/* Extra map roads */
+
+.map-container::before {
+    content: "";
+    position: absolute;
+
+    width: 700px;
+    height: 18px;
+
+    background: #263746;
+
+    top: 170px;
+    left: -120px;
+
+    transform: rotate(-17deg);
+}
+
+.map-container::after {
+    content: "";
+    position: absolute;
+
+    width: 500px;
+    height: 15px;
+
+    background: #263746;
+
+    top: 250px;
+    left: -20px;
+
+    transform: rotate(30deg);
+}
+
+/* Map labels */
+
+.map-label {
+    position: absolute;
+
+    color: #65788a;
+    font-size: 10px;
+
+    letter-spacing: 1px;
+}
+
+.label-one {
+    top: 90px;
+    left: 35px;
+}
+
+.label-two {
+    top: 280px;
+    right: 25px;
+}
+
+.label-three {
+    top: 145px;
+    right: 30px;
+}
+
+/* Route */
+
+.route-line {
+    position: absolute;
+
+    width: 300px;
+    height: 6px;
+
+    background: #249cff;
+
+    box-shadow:
+        0 0 8px #249cff,
+        0 0 20px #249cff;
+
+    transform: rotate(-17deg);
+
+    top: 190px;
+    left: 70px;
+
+    border-radius: 20px;
+
+    z-index: 4;
+}
+
+/* Car */
+
+.car {
+    position: absolute;
+
+    left: 52%;
+    top: 182px;
+
+    transform: translate(-50%, -50%);
+
+    font-size: 35px;
+
+    z-index: 8;
+
+    filter: drop-shadow(0 0 10px #58baff);
+}
+
+/* Drone */
+
+.drone {
+    position: absolute;
+
+    right: 40px;
+    top: 65px;
+
+    font-size: 35px;
+
+    z-index: 8;
+
+    animation: droneFloat 2.5s infinite ease-in-out;
+
+    filter:
+        drop-shadow(0 0 8px #49baff)
+        drop-shadow(0 0 15px #1688ff);
+}
+
+@keyframes droneFloat {
+
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-9px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* Traffic marker */
+
+.traffic-marker {
+    position: absolute;
+
+    left: 30px;
+    top: 125px;
+
+    padding: 9px 12px;
+
+    background: #1b1115;
+
+    color: #ff6573;
+
+    border: 1px solid #ff6573;
+
+    border-radius: 9px;
+
+    font-size: 10px;
+
+    z-index: 10;
+
+    box-shadow: 0 0 15px #ff657333;
+}
+
+/* Parking marker */
+
+.parking-marker {
+    position: absolute;
+
+    right: 25px;
+    bottom: 45px;
+
+    padding: 9px 12px;
+
+    background: #0b1b17;
+
+    color: #45dca1;
+
+    border: 1px solid #45dca1;
+
+    border-radius: 9px;
+
+    font-size: 10px;
+
+    z-index: 10;
+
+    box-shadow: 0 0 15px #45dca133;
+}
+
+/* =========================
+   SCAN BUTTON
+========================= */
+
+.scan-area {
+    position: absolute;
+
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+
+    z-index: 12;
+}
+
+.scan-button {
+    width: 100%;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    background: #1688ff;
+
+    color: white;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 15px #1688ff55;
+
+    transition: 0.2s;
+}
+
+.scan-button:hover {
+    background: #35a0ff;
+}
+
+.scan-button:active {
+    transform: scale(0.98);
+}
+
+/* =========================
+   INFO PANEL
+========================= */
+
+.content {
+    padding: 20px;
+}
+
+.greeting {
+    margin-bottom: 18px;
+}
+
+.greeting h2 {
+    font-size: 22px;
+}
+
+.greeting p {
+    color: #77899a;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+/* Status card */
+
+.status-card {
+    background: #0e1721;
+
+    border: 1px solid #203548;
+
+    border-radius: 18px;
+
+    padding: 18px;
+
+    margin-bottom: 18px;
+}
+
+.status-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-title {
+    color: #65c2ff;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.status-time {
+    color: #75899b;
+    font-size: 11px;
+}
+
+.status-message {
+    font-size: 15px;
+    margin-top: 10px;
+}
+
+.status-details {
+    color: #8093a5;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+/* =========================
+   FEATURE CARDS
+========================= */
+
+.section-title {
+    font-size: 13px;
+    color: #8093a5;
+    margin-bottom: 12px;
+}
+
+.features {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+}
+
+.feature {
+    background: #0d151e;
+
+    border: 1px solid #1d3143;
+
+    border-radius: 16px;
+
+    padding: 17px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.feature:hover {
+    border-color: #258dce;
+    transform: translateY(-2px);
+}
+
+.feature-icon {
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.feature h3 {
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.feature p {
+    color: #718496;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+/* =========================
+   TIME SAVED
+========================= */
+
+.time-card {
+    margin-top: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0d1d2b,
+            #0a1119
+        );
+
+    border: 1px solid #214a67;
+
+    border-radius: 18px;
+
+    padding: 20px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.time-card p {
+    color: #8093a5;
+    font-size: 11px;
+}
+
+.time-card h2 {
+    margin-top: 5px;
+    font-size: 25px;
+    color: #58bdff;
+}
+
+.time-icon {
+    font-size: 35px;
+}
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+.bottom-nav {
+    position: fixed;
+
+    bottom: 0;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 100%;
+    max-width: 430px;
+
+    height: 75px;
+
+    background: #080d14;
+
+    border-top: 1px solid #1c2d3d;
+
+    display: flex;
+
+    justify-content: space-around;
+
+    align-items: center;
+
+    z-index: 30;
+}
+
+.nav-item {
+    color: #64788a;
+
+    font-size: 10px;
+
+    text-align: center;
+
+    cursor: pointer;
+}
+
+.nav-item div {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.nav-item.active {
+    color: #4bb7ff;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast {
+    position: fixed;
+
+    left: 50%;
+
+    bottom: 90px;
+
+    transform: translateX(-50%) translateY(20px);
+
+    background: #162332;
+
+    border: 1px solid #2c5875;
+
+    color: white;
+
+    padding: 12px 18px;
+
+    border-radius: 12px;
+
+    font-size: 12px;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition: 0.3s;
+
+    z-index: 100;
+
+    width: max-content;
+    max-width: 85%;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (min-width: 431px) {
+
+    body {
+        background:
+            radial-gradient(
+                circle at center,
+                #111d29,
+                #020407
+            );
+    }
+
+    .app {
+        box-shadow:
+            0 0 80px #000;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+    <!-- TOP BAR -->
+
+    <header class="topbar">
+
+        <div class="logo-area">
+
+            <div class="logo-circle">
+                🚁
+            </div>
+
+            <div class="logo-text">
+
+                <h1>SKYDRIVE</h1>
+
+                <p>
+                    SMART DRIVING SYSTEM
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="connection">
+
+            <span class="connection-dot"></span>
+
+            CONNECTED
+
+        </div>
+
+    </header>
+
+
+
+    <!-- MAP -->
+
+    <section class="map-container" id="map">
+
+        <div class="map-label label-one">
+            CENTRAL ROAD
+        </div>
+
+        <div class="map-label label-two">
+            PARKING ZONE
+        </div>
+
+        <div class="map-label label-three">
+            MAIN STREET
+        </div>
+
+
+        <div class="route-line" id="routeLine"></div>
+
+
+        <div class="car" id="car">
+            🚗
+        </div>
+
+
+        <div class="drone" id="drone">
+            🚁
+        </div>
+
+
+        <div class="traffic-marker" id="trafficMarker">
+            ⚠ TRAFFIC
+        </div>
+
+
+        <div class="parking-marker" id="parkingMarker">
+            P PARKING
+        </div>
+
+
+        <div class="scan-area">
+
+            <button
+                class="scan-button"
+                onclick="startScan()"
+            >
+                ✦ START DRONE SCAN
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- CONTENT -->
+
+    <main class="content">
+
+
+        <div class="greeting">
+
+            <h2>
+                Good morning
+            </h2>
+
+            <p>
+                Let's find the smartest route.
+            </p>
+
+        </div>
+
+
+
+        <!-- STATUS -->
+
+        <div class="status-card">
+
+            <div class="status-top">
+
+                <div class="status-title">
+                    SKYDRIVE STATUS
+                </div>
+
+                <div
+                    class="status-time"
+                    id="statusTime"
+                >
+                    READY
+                </div>
+
+            </div>
+
+
+            <div
+                class="status-message"
+                id="statusMessage"
+            >
+                Everything is ready.
+            </div>
+
+
+            <div
+                class="status-details"
+                id="statusDetails"
+            >
+                Start a drone scan to check traffic and parking.
+            </div>
+
+        </div>
+
+
+
+        <!-- FEATURES -->
+
+        <div class="section-title">
+            SMART FEATURES
+        </div>
+
+
+        <section class="features">
+
+
+            <div
+                class="feature"
+                onclick="checkTraffic()"
+            >
+
+                <div class="feature-icon">
+                    🚦
+                </div>
+
+                <h3>
+                    Traffic
+                </h3>
+
+                <p>
+                    Detect traffic ahead.
+                </p>
+
+            </div>
+
+
+
+            <div
+                class="feature"
+                onclick="findShortcut()"
+            >
+
+                <div class="feature-icon">
+                    🛣️
+                </div>
+
+                <h3>
+                    Shortcut
+                </h3>
+
+                <p>
+                    Find a faster route.
+                </p>
+
+            </div>
+
+
+
+            <div
+                class="feature"
+                onclick="findParking()"
+            >
+
+                <div class="feature-icon">
+                    🅿️
+                </div>
+
+                <h3>
+                    Parking
+                </h3>
+
+                <p>
+                    Find available parking.
+                </p>
+
+            </div>
+
+
+
+            <div
+                class="feature"
+                onclick="routeGuidance()"
+            >
+
+                <div class="feature-icon">
+                    🧭
+                </div>
+
+                <h3>
+                    Navigation
+                </h3>
+
+                <p>
+                    Follow the best route.
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- TIME SAVED -->
+
+        <div class="time-card">
+
+            <div>
+
+                <p>
+                    ESTIMATED TIME SAVED
+                </p>
+
+                <h2 id="timeSaved">
+                    -- min
+                </h2>
+
+            </div>
+
+
+            <div class="time-icon">
+                ⚡
+            </div>
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- BOTTOM NAV -->
+
+    <nav class="bottom-nav">
+
+        <div
+            class="nav-item active"
+            onclick="home()"
+        >
+
+            <div>
+                ◉
+            </div>
+
+            Home
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="scanNav()"
+        >
+
+            <div>
+                ◈
+            </div>
+
+            Scan
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="parkingNav()"
+        >
+
+            <div>
+                P
+            </div>
+
+            Parking
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="settings()"
+        >
+
+            <div>
+                ⚙
+            </div>
+
+            Settings
+
+        </div>
+
+    </nav>
+
+
+</div>
+
+
+<!-- TOAST -->
+
+<div
+    class="toast"
+    id="toast"
+>
+    SkyDrive
+</div>
+
+
+
+<script>
+
+/* =========================
+   BASIC FUNCTIONS
+========================= */
+
+function updateStatus(title, message) {
+
+    document.getElementById(
+        "statusMessage"
+    ).textContent = title;
+
+    document.getElementById(
+        "statusDetails"
+    ).textContent = message;
+
+    document.getElementById(
+        "statusTime"
+    ).textContent = "NOW";
+
+}
+
+
+function toast(message) {
+
+    const box =
+        document.getElementById("toast");
+
+    box.textContent = message;
+
+    box.classList.add("show");
+
+    setTimeout(function() {
+
+        box.classList.remove("show");
+
+    }, 2200);
+
+}
+
+
+function clearMapMarkers() {
+
+    document
+        .getElementById("trafficMarker")
+        .style.display = "none";
+
+    document
+        .getElementById("parkingMarker")
+        .style.display = "none";
+
+}
+
+
+/* =========================
+   DRONE SCAN
+========================= */
+
+function startScan() {
+
+    updateStatus(
+        "Drone is scanning...",
+        "SkyDrive is checking traffic and parking ahead."
+    );
+
+    toast(
+        "🚁 Drone scan started"
+    );
+
+    const drone =
+        document.getElementById("drone");
+
+    drone.style.animationDuration =
+        "0.6s";
+
+
+    setTimeout(function() {
+
+        clearMapMarkers();
+
+        document
+            .getElementById("trafficMarker")
+            .style.display = "block";
+
+
+        updateStatus(
+            "Traffic detected",
+            "Heavy traffic found ahead. SkyDrive found an alternate route."
+        );
+
+
+        document
+            .getElementById("timeSaved")
+            .textContent = "8 min";
+
+
+        toast(
+            "⚠ Traffic detected"
+        );
+
+
+        setTimeout(function() {
+
+            document
+                .getElementById("parkingMarker")
+                .style.display = "block";
+
+            updateStatus(
+                "Parking found",
+                "An available parking space was found near the destination."
+            );
+
+            toast(
+                "✓ Parking found"
+            );
+
+        }, 1300);
+
+
+    }, 1500);
+
+}
+
+
+/* =========================
+   TRAFFIC
+========================= */
+
+function checkTraffic() {
+
+    clearMapMarkers();
+
+    document
+        .getElementById("trafficMarker")
+        .style.display = "block";
+
+
+    updateStatus(
+        "Heavy traffic ahead",
+        "Traffic detected approximately 2.4 km ahead."
+    );
+
+
+    toast(
+        "🚦 Traffic detected"
+    );
+
+}
+
+
+/* =========================
+   SHORTCUT
+========================= */
+
+function findShortcut() {
+
+    clearMapMarkers();
+
+    const route =
+        document.getElementById("routeLine");
+
+    route.style.display = "block";
+
+
+    updateStatus(
+        "Smart shortcut found",
+        "SkyDrive found a route that can save approximately 8 minutes."
+    );
+
+
+    document
+        .getElementById("timeSaved")
+        .textContent = "8 min";
+
+
+    toast(
+        "🛣 Faster route found"
+    );
+
+}
+
+
+/* =========================
+   PARKING
+========================= */
+
+function findParking() {
+
+    clearMapMarkers();
+
+    document
+        .getElementById("parkingMarker")
+        .style.display = "block";
+
+
+    updateStatus(
+        "Parking available",
+        "SkyDrive found an available parking space near your destination."
+    );
+
+
+    toast(
+        "🅿 Parking space found"
+    );
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function routeGuidance() {
+
+    clearMapMarkers();
+
+    const route =
+        document.getElementById("routeLine");
+
+    route.style.display = "block";
+
+
+    updateStatus(
+        "Navigation active",
+        "Follow the blue route to avoid traffic and reach parking."
+    );
+
+
+    toast(
+        "🧭 Navigation started"
+    );
+
+}
+
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+function home() {
+
+    toast(
+        "⌂ Home"
+    );
+
+}
+
+
+function scanNav() {
+
+    startScan();
+
+}
+
+
+function parkingNav() {
+
+    findParking();
+
+}
+
+
+function settings() {
+
+    toast(
+        "⚙ Settings coming soon"
+    );
+
+}
+
+
+/* =========================
+   INITIAL MAP
+========================= */
+
+document
+    .getElementById("trafficMarker")
+    .style.display = "none";
+
+document
+    .getElementById("parkingMarker")
+    .style.display = "none";
+
+</script>
+
+
+</body>
+</html> <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SkyDrive</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #05080d;
+    color: white;
+    overflow-x: hidden;
+}
+
+/* =========================
+   APP
+========================= */
+
+.app {
+    max-width: 430px;
+    min-height: 100vh;
+    margin: auto;
+    background: #080d14;
+    position: relative;
+    padding-bottom: 90px;
+}
+
+/* =========================
+   TOP BAR
+========================= */
+
+.topbar {
+    height: 75px;
+    padding: 15px 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: rgba(8,13,20,0.95);
+    border-bottom: 1px solid #1c2b3a;
+
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-circle {
+    width: 43px;
+    height: 43px;
+
+    border-radius: 13px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #101c29;
+    border: 1px solid #258dce;
+
+    font-size: 22px;
+
+    box-shadow: 0 0 20px #1688ff33;
+}
+
+.logo-text h1 {
+    font-size: 19px;
+    letter-spacing: 2px;
+}
+
+.logo-text p {
+    font-size: 9px;
+    color: #71869a;
+    margin-top: 3px;
+}
+
+.connection {
+    font-size: 10px;
+    color: #4ee0a0;
+
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.connection-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #4ee0a0;
+    box-shadow: 0 0 8px #4ee0a0;
+}
+
+/* =========================
+   MAP
+========================= */
+
+.map-container {
+    height: 380px;
+    position: relative;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent 48%,
+            #1b2935 49%,
+            #1b2935 51%,
+            transparent 52%
+        ),
+        linear-gradient(
+            0deg,
+            transparent 48%,
+            #1b2935 49%,
+            #1b2935 51%,
+            transparent 52%
+        ),
+        #101821;
+}
+
+/* Extra map roads */
+
+.map-container::before {
+    content: "";
+    position: absolute;
+
+    width: 700px;
+    height: 18px;
+
+    background: #263746;
+
+    top: 170px;
+    left: -120px;
+
+    transform: rotate(-17deg);
+}
+
+.map-container::after {
+    content: "";
+    position: absolute;
+
+    width: 500px;
+    height: 15px;
+
+    background: #263746;
+
+    top: 250px;
+    left: -20px;
+
+    transform: rotate(30deg);
+}
+
+/* Map labels */
+
+.map-label {
+    position: absolute;
+
+    color: #65788a;
+    font-size: 10px;
+
+    letter-spacing: 1px;
+}
+
+.label-one {
+    top: 90px;
+    left: 35px;
+}
+
+.label-two {
+    top: 280px;
+    right: 25px;
+}
+
+.label-three {
+    top: 145px;
+    right: 30px;
+}
+
+/* Route */
+
+.route-line {
+    position: absolute;
+
+    width: 300px;
+    height: 6px;
+
+    background: #249cff;
+
+    box-shadow:
+        0 0 8px #249cff,
+        0 0 20px #249cff;
+
+    transform: rotate(-17deg);
+
+    top: 190px;
+    left: 70px;
+
+    border-radius: 20px;
+
+    z-index: 4;
+}
+
+/* Car */
+
+.car {
+    position: absolute;
+
+    left: 52%;
+    top: 182px;
+
+    transform: translate(-50%, -50%);
+
+    font-size: 35px;
+
+    z-index: 8;
+
+    filter: drop-shadow(0 0 10px #58baff);
+}
+
+/* Drone */
+
+.drone {
+    position: absolute;
+
+    right: 40px;
+    top: 65px;
+
+    font-size: 35px;
+
+    z-index: 8;
+
+    animation: droneFloat 2.5s infinite ease-in-out;
+
+    filter:
+        drop-shadow(0 0 8px #49baff)
+        drop-shadow(0 0 15px #1688ff);
+}
+
+@keyframes droneFloat {
+
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-9px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* Traffic marker */
+
+.traffic-marker {
+    position: absolute;
+
+    left: 30px;
+    top: 125px;
+
+    padding: 9px 12px;
+
+    background: #1b1115;
+
+    color: #ff6573;
+
+    border: 1px solid #ff6573;
+
+    border-radius: 9px;
+
+    font-size: 10px;
+
+    z-index: 10;
+
+    box-shadow: 0 0 15px #ff657333;
+}
+
+/* Parking marker */
+
+.parking-marker {
+    position: absolute;
+
+    right: 25px;
+    bottom: 45px;
+
+    padding: 9px 12px;
+
+    background: #0b1b17;
+
+    color: #45dca1;
+
+    border: 1px solid #45dca1;
+
+    border-radius: 9px;
+
+    font-size: 10px;
+
+    z-index: 10;
+
+    box-shadow: 0 0 15px #45dca133;
+}
+
+/* =========================
+   SCAN BUTTON
+========================= */
+
+.scan-area {
+    position: absolute;
+
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+
+    z-index: 12;
+}
+
+.scan-button {
+    width: 100%;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    background: #1688ff;
+
+    color: white;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 15px #1688ff55;
+
+    transition: 0.2s;
+}
+
+.scan-button:hover {
+    background: #35a0ff;
+}
+
+.scan-button:active {
+    transform: scale(0.98);
+}
+
+/* =========================
+   INFO PANEL
+========================= */
+
+.content {
+    padding: 20px;
+}
+
+.greeting {
+    margin-bottom: 18px;
+}
+
+.greeting h2 {
+    font-size: 22px;
+}
+
+.greeting p {
+    color: #77899a;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+/* Status card */
+
+.status-card {
+    background: #0e1721;
+
+    border: 1px solid #203548;
+
+    border-radius: 18px;
+
+    padding: 18px;
+
+    margin-bottom: 18px;
+}
+
+.status-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-title {
+    color: #65c2ff;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.status-time {
+    color: #75899b;
+    font-size: 11px;
+}
+
+.status-message {
+    font-size: 15px;
+    margin-top: 10px;
+}
+
+.status-details {
+    color: #8093a5;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+/* =========================
+   FEATURE CARDS
+========================= */
+
+.section-title {
+    font-size: 13px;
+    color: #8093a5;
+    margin-bottom: 12px;
+}
+
+.features {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+}
+
+.feature {
+    background: #0d151e;
+
+    border: 1px solid #1d3143;
+
+    border-radius: 16px;
+
+    padding: 17px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.feature:hover {
+    border-color: #258dce;
+    transform: translateY(-2px);
+}
+
+.feature-icon {
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.feature h3 {
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.feature p {
+    color: #718496;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+/* =========================
+   TIME SAVED
+========================= */
+
+.time-card {
+    margin-top: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0d1d2b,
+            #0a1119
+        );
+
+    border: 1px solid #214a67;
+
+    border-radius: 18px;
+
+    padding: 20px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.time-card p {
+    color: #8093a5;
+    font-size: 11px;
+}
+
+.time-card h2 {
+    margin-top: 5px;
+    font-size: 25px;
+    color: #58bdff;
+}
+
+.time-icon {
+    font-size: 35px;
+}
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+.bottom-nav {
+    position: fixed;
+
+    bottom: 0;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 100%;
+    max-width: 430px;
+
+    height: 75px;
+
+    background: #080d14;
+
+    border-top: 1px solid #1c2d3d;
+
+    display: flex;
+
+    justify-content: space-around;
+
+    align-items: center;
+
+    z-index: 30;
+}
+
+.nav-item {
+    color: #64788a;
+
+    font-size: 10px;
+
+    text-align: center;
+
+    cursor: pointer;
+}
+
+.nav-item div {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.nav-item.active {
+    color: #4bb7ff;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast {
+    position: fixed;
+
+    left: 50%;
+
+    bottom: 90px;
+
+    transform: translateX(-50%) translateY(20px);
+
+    background: #162332;
+
+    border: 1px solid #2c5875;
+
+    color: white;
+
+    padding: 12px 18px;
+
+    border-radius: 12px;
+
+    font-size: 12px;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition: 0.3s;
+
+    z-index: 100;
+
+    width: max-content;
+    max-width: 85%;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (min-width: 431px) {
+
+    body {
+        background:
+            radial-gradient(
+                circle at center,
+                #111d29,
+                #020407
+            );
+    }
+
+    .app {
+        box-shadow:
+            0 0 80px #000;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+    <!-- TOP BAR -->
+
+    <header class="topbar">
+
+        <div class="logo-area">
+
+            <div class="logo-circle">
+                🚁
+            </div>
+
+            <div class="logo-text">
+
+                <h1>SKYDRIVE</h1>
+
+                <p>
+                    SMART DRIVING SYSTEM
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="connection">
+
+            <span class="connection-dot"></span>
+
+            CONNECTED
+
+        </div>
+
+    </header>
+
+
+
+    <!-- MAP -->
+
+    <section class="map-container" id="map">
+
+        <div class="map-label label-one">
+            CENTRAL ROAD
+        </div>
+
+        <div class="map-label label-two">
+            PARKING ZONE
+        </div>
+
+        <div class="map-label label-three">
+            MAIN STREET
+        </div>
+
+
+        <div class="route-line" id="routeLine"></div>
+
+
+        <div class="car" id="car">
+            🚗
+        </div>
+
+
+        <div class="drone" id="drone">
+            🚁
+        </div>
+
+
+        <div class="traffic-marker" id="trafficMarker">
+            ⚠ TRAFFIC
+        </div>
+
+
+        <div class="parking-marker" id="parkingMarker">
+            P PARKING
+        </div>
+
+
+        <div class="scan-area">
+
+            <button
+                class="scan-button"
+                onclick="startScan()"
+            >
+                ✦ START DRONE SCAN
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- CONTENT -->
+
+    <main class="content">
+
+
+        <div class="greeting">
+
+            <h2>
+                Good morning
+            </h2>
+
+            <p>
+                Let's find the smartest route.
+            </p>
+
+        </div>
+
+
+
+        <!-- STATUS -->
+
+        <div class="status-card">
+
+            <div class="status-top">
+
+                <div class="status-title">
+                    SKYDRIVE STATUS
+                </div>
+
+                <div
+                    class="status-time"
+                    id="statusTime"
+                >
+                    READY
+                </div>
+
+            </div>
+
+
+            <div
+                class="status-message"
+                id="statusMessage"
+            >
+                Everything is ready.
+            </div>
+
+
+            <div
+                class="status-details"
+                id="statusDetails"
+            >
+                Start a drone scan to check traffic and parking.
+            </div>
+
+        </div>
+
+
+
+        <!-- FEATURES -->
+
+        <div class="section-title">
+            SMART FEATURES
+        </div>
+
+
+        <section class="features">
+
+
+            <div
+                class="feature"
+                onclick="checkTraffic()"
+            >
+
+                <div class="feature-icon">
+                    🚦
+                </div>
+
+                <h3>
+                    Traffic
+                </h3>
+
+                <p>
+                    Detect traffic ahead.
+                </p>
+
+            </div>
+
+
+
+            <div
+                class="feature"
+                onclick="findShortcut()"
+            >
+
+                <div class="feature-icon">
+                    🛣️
+                </div>
+
+                <h3>
+                    Shortcut
+                </h3>
+
+                <p>
+                    Find a faster route.
+                </p>
+
+            </div>
+
+
+
+            <div
+                class="feature"
+                onclick="findParking()"
+            >
+
+                <div class="feature-icon">
+                    🅿️
+                </div>
+
+                <h3>
+                    Parking
+                </h3>
+
+                <p>
+                    Find available parking.
+                </p>
+
+            </div>
+
+
+
+            <div
+                class="feature"
+                onclick="routeGuidance()"
+            >
+
+                <div class="feature-icon">
+                    🧭
+                </div>
+
+                <h3>
+                    Navigation
+                </h3>
+
+                <p>
+                    Follow the best route.
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- TIME SAVED -->
+
+        <div class="time-card">
+
+            <div>
+
+                <p>
+                    ESTIMATED TIME SAVED
+                </p>
+
+                <h2 id="timeSaved">
+                    -- min
+                </h2>
+
+            </div>
+
+
+            <div class="time-icon">
+                ⚡
+            </div>
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- BOTTOM NAV -->
+
+    <nav class="bottom-nav">
+
+        <div
+            class="nav-item active"
+            onclick="home()"
+        >
+
+            <div>
+                ◉
+            </div>
+
+            Home
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="scanNav()"
+        >
+
+            <div>
+                ◈
+            </div>
+
+            Scan
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="parkingNav()"
+        >
+
+            <div>
+                P
+            </div>
+
+            Parking
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="settings()"
+        >
+
+            <div>
+                ⚙
+            </div>
+
+            Settings
+
+        </div>
+
+    </nav>
+
+
+</div>
+
+
+<!-- TOAST -->
+
+<div
+    class="toast"
+    id="toast"
+>
+    SkyDrive
+</div>
+
+
+
+<script>
+
+/* =========================
+   BASIC FUNCTIONS
+========================= */
+
+function updateStatus(title, message) {
+
+    document.getElementById(
+        "statusMessage"
+    ).textContent = title;
+
+    document.getElementById(
+        "statusDetails"
+    ).textContent = message;
+
+    document.getElementById(
+        "statusTime"
+    ).textContent = "NOW";
+
+}
+
+
+function toast(message) {
+
+    const box =
+        document.getElementById("toast");
+
+    box.textContent = message;
+
+    box.classList.add("show");
+
+    setTimeout(function() {
+
+        box.classList.remove("show");
+
+    }, 2200);
+
+}
+
+
+function clearMapMarkers() {
+
+    document
+        .getElementById("trafficMarker")
+        .style.display = "none";
+
+    document
+        .getElementById("parkingMarker")
+        .style.display = "none";
+
+}
+
+
+/* =========================
+   DRONE SCAN
+========================= */
+
+function startScan() {
+
+    updateStatus(
+        "Drone is scanning...",
+        "SkyDrive is checking traffic and parking ahead."
+    );
+
+    toast(
+        "🚁 Drone scan started"
+    );
+
+    const drone =
+        document.getElementById("drone");
+
+    drone.style.animationDuration =
+        "0.6s";
+
+
+    setTimeout(function() {
+
+        clearMapMarkers();
+
+        document
+            .getElementById("trafficMarker")
+            .style.display = "block";
+
+
+        updateStatus(
+            "Traffic detected",
+            "Heavy traffic found ahead. SkyDrive found an alternate route."
+        );
+
+
+        document
+            .getElementById("timeSaved")
+            .textContent = "8 min";
+
+
+        toast(
+            "⚠ Traffic detected"
+        );
+
+
+        setTimeout(function() {
+
+            document
+                .getElementById("parkingMarker")
+                .style.display = "block";
+
+            updateStatus(
+                "Parking found",
+                "An available parking space was found near the destination."
+            );
+
+            toast(
+                "✓ Parking found"
+            );
+
+        }, 1300);
+
+
+    }, 1500);
+
+}
+
+
+/* =========================
+   TRAFFIC
+========================= */
+
+function checkTraffic() {
+
+    clearMapMarkers();
+
+    document
+        .getElementById("trafficMarker")
+        .style.display = "block";
+
+
+    updateStatus(
+        "Heavy traffic ahead",
+        "Traffic detected approximately 2.4 km ahead."
+    );
+
+
+    toast(
+        "🚦 Traffic detected"
+    );
+
+}
+
+
+/* =========================
+   SHORTCUT
+========================= */
+
+function findShortcut() {
+
+    clearMapMarkers();
+
+    const route =
+        document.getElementById("routeLine");
+
+    route.style.display = "block";
+
+
+    updateStatus(
+        "Smart shortcut found",
+        "SkyDrive found a route that can save approximately 8 minutes."
+    );
+
+
+    document
+        .getElementById("timeSaved")
+        .textContent = "8 min";
+
+
+    toast(
+        "🛣 Faster route found"
+    );
+
+}
+
+
+/* =========================
+   PARKING
+========================= */
+
+function findParking() {
+
+    clearMapMarkers();
+
+    document
+        .getElementById("parkingMarker")
+        .style.display = "block";
+
+
+    updateStatus(
+        "Parking available",
+        "SkyDrive found an available parking space near your destination."
+    );
+
+
+    toast(
+        "🅿 Parking space found"
+    );
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function routeGuidance() {
+
+    clearMapMarkers();
+
+    const route =
+        document.getElementById("routeLine");
+
+    route.style.display = "block";
+
+
+    updateStatus(
+        "Navigation active",
+        "Follow the blue route to avoid traffic and reach parking."
+    );
+
+
+    toast(
+        "🧭 Navigation started"
+    );
+
+}
+
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+function home() {
+
+    toast(
+        "⌂ Home"
+    );
+
+}
+
+
+function scanNav() {
+
+    startScan();
+
+}
+
+
+function parkingNav() {
+
+    findParking();
+
+}
+
+
+function settings() {
+
+    toast(
+        "⚙ Settings coming soon"
+    );
+
+}
+
+
+/* =========================
+   INITIAL MAP
+========================= */
+
+document
+    .getElementById("trafficMarker")
+    .style.display = "none";
+
+document
+    .getElementById("parkingMarker")
+    .style.display = "none";
+
+</script>
+
+
+</body>
+</html> <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SkyDrive</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #05080d;
+    color: white;
+    overflow-x: hidden;
+}
+
+/* =========================
+   APP
+========================= */
+
+.app {
+    max-width: 430px;
+    min-height: 100vh;
+    margin: auto;
+    background: #080d14;
+    position: relative;
+    padding-bottom: 90px;
+}
+
+/* =========================
+   TOP BAR
+========================= */
+
+.topbar {
+    height: 75px;
+    padding: 15px 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: rgba(8,13,20,0.95);
+    border-bottom: 1px solid #1c2b3a;
+
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-circle {
+    width: 43px;
+    height: 43px;
+
+    border-radius: 13px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #101c29;
+    border: 1px solid #258dce;
+
+    font-size: 22px;
+
+    box-shadow: 0 0 20px #1688ff33;
+}
+
+.logo-text h1 {
+    font-size: 19px;
+    letter-spacing: 2px;
+}
+
+.logo-text p {
+    font-size: 9px;
+    color: #71869a;
+    margin-top: 3px;
+}
+
+.connection {
+    font-size: 10px;
+    color: #4ee0a0;
+
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.connection-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #4ee0a0;
+    box-shadow: 0 0 8px #4ee0a0;
+}
+
+/* =========================
+   MAP
+========================= */
+
+.map-container {
+    height: 380px;
+    position: relative;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent 48%,
+            #1b2935 49%,
+            #1b2935 51%,
+            transparent 52%
+        ),
+        linear-gradient(
+            0deg,
+            transparent 48%,
+            #1b2935 49%,
+            #1b2935 51%,
+            transparent 52%
+        ),
+        #101821;
+}
+
+/* Extra map roads */
+
+.map-container::before {
+    content: "";
+    position: absolute;
+
+    width: 700px;
+    height: 18px;
+
+    background: #263746;
+
+    top: 170px;
+    left: -120px;
+
+    transform: rotate(-17deg);
+}
+
+.map-container::after {
+    content: "";
+    position: absolute;
+
+    width: 500px;
+    height: 15px;
+
+    background: #263746;
+
+    top: 250px;
+    left: -20px;
+
+    transform: rotate(30deg);
+}
+
+/* Map labels */
+
+.map-label {
+    position: absolute;
+
+    color: #65788a;
+    font-size: 10px;
+
+    letter-spacing: 1px;
+}
+
+.label-one {
+    top: 90px;
+    left: 35px;
+}
+
+.label-two {
+    top: 280px;
+    right: 25px;
+}
+
+.label-three {
+    top: 145px;
+    right: 30px;
+}
+
+/* Route */
+
+.route-line {
+    position: absolute;
+
+    width: 300px;
+    height: 6px;
+
+    background: #249cff;
+
+    box-shadow:
+        0 0 8px #249cff,
+        0 0 20px #249cff;
+
+    transform: rotate(-17deg);
+
+    top: 190px;
+    left: 70px;
+
+    border-radius: 20px;
+
+    z-index: 4;
+}
+
+/* Car */
+
+.car {
+    position: absolute;
+
+    left: 52%;
+    top: 182px;
+
+    transform: translate(-50%, -50%);
+
+    font-size: 35px;
+
+    z-index: 8;
+
+    filter: drop-shadow(0 0 10px #58baff);
+}
+
+/* Drone */
+
+.drone {
+    position: absolute;
+
+    right: 40px;
+    top: 65px;
+
+    font-size: 35px;
+
+    z-index: 8;
+
+    animation: droneFloat 2.5s infinite ease-in-out;
+
+    filter:
+        drop-shadow(0 0 8px #49baff)
+        drop-shadow(0 0 15px #1688ff);
+}
+
+@keyframes droneFloat {
+
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-9px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* Traffic marker */
+
+.traffic-marker {
+    position: absolute;
+
+    left: 30px;
+    top: 125px;
+
+    padding: 9px 12px;
+
+    background: #1b1115;
+
+    color: #ff6573;
+
+    border: 1px solid #ff6573;
+
+    border-radius: 9px;
+
+    font-size: 10px;
+
+    z-index: 10;
+
+    box-shadow: 0 0 15px #ff657333;
+}
+
+/* Parking marker */
+
+.parking-marker {
+    position: absolute;
+
+    right: 25px;
+    bottom: 45px;
+
+    padding: 9px 12px;
+
+    background: #0b1b17;
+
+    color: #45dca1;
+
+    border: 1px solid #45dca1;
+
+    border-radius: 9px;
+
+    font-size: 10px;
+
+    z-index: 10;
+
+    box-shadow: 0 0 15px #45dca133;
+}
+
+/* =========================
+   SCAN BUTTON
+========================= */
+
+.scan-area {
+    position: absolute;
+
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+
+    z-index: 12;
+}
+
+.scan-button {
+    width: 100%;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    background: #1688ff;
+
+    color: white;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 15px #1688ff55;
+
+    transition: 0.2s;
+}
+
+.scan-button:hover {
+    background: #35a0ff;
+}
+
+.scan-button:active {
+    transform: scale(0.98);
+}
+
+/* =========================
+   INFO PANEL
+========================= */
+
+.content {
+    padding: 20px;
+}
+
+.greeting {
+    margin-bottom: 18px;
+}
+
+.greeting h2 {
+    font-size: 22px;
+}
+
+.greeting p {
+    color: #77899a;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+/* Status card */
+
+.status-card {
+    background: #0e1721;
+
+    border: 1px solid #203548;
+
+    border-radius: 18px;
+
+    padding: 18px;
+
+    margin-bottom: 18px;
+}
+
+.status-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-title {
+    color: #65c2ff;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.status-time {
+    color: #75899b;
+    font-size: 11px;
+}
+
+.status-message {
+    font-size: 15px;
+    margin-top: 10px;
+}
+
+.status-details {
+    color: #8093a5;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+/* =========================
+   FEATURE CARDS
+========================= */
+
+.section-title {
+    font-size: 13px;
+    color: #8093a5;
+    margin-bottom: 12px;
+}
+
+.features {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+}
+
+.feature {
+    background: #0d151e;
+
+    border: 1px solid #1d3143;
+
+    border-radius: 16px;
+
+    padding: 17px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.feature:hover {
+    border-color: #258dce;
+    transform: translateY(-2px);
+}
+
+.feature-icon {
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.feature h3 {
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.feature p {
+    color: #718496;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+/* =========================
+   TIME SAVED
+========================= */
+
+.time-card {
+    margin-top: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0d1d2b,
+            #0a1119
+        );
+
+    border: 1px solid #214a67;
+
+    border-radius: 18px;
+
+    padding: 20px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.time-card p {
+    color: #8093a5;
+    font-size: 11px;
+}
+
+.time-card h2 {
+    margin-top: 5px;
+    font-size: 25px;
+    color: #58bdff;
+}
+
+.time-icon {
+    font-size: 35px;
+}
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+.bottom-nav {
+    position: fixed;
+
+    bottom: 0;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 100%;
+    max-width: 430px;
+
+    height: 75px;
+
+    background: #080d14;
+
+    border-top: 1px solid #1c2d3d;
+
+    display: flex;
+
+    justify-content: space-around;
+
+    align-items: center;
+
+    z-index: 30;
+}
+
+.nav-item {
+    color: #64788a;
+
+    font-size: 10px;
+
+    text-align: center;
+
+    cursor: pointer;
+}
+
+.nav-item div {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.nav-item.active {
+    color: #4bb7ff;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast {
+    position: fixed;
+
+    left: 50%;
+
+    bottom: 90px;
+
+    transform: translateX(-50%) translateY(20px);
+
+    background: #162332;
+
+    border: 1px solid #2c5875;
+
+    color: white;
+
+    padding: 12px 18px;
+
+    border-radius: 12px;
+
+    font-size: 12px;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition: 0.3s;
+
+    z-index: 100;
+
+    width: max-content;
+    max-width: 85%;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (min-width: 431px) {
+
+    body {
+        background:
+            radial-gradient(
+                circle at center,
+                #111d29,
+                #020407
+            );
+    }
+
+    .app {
+        box-shadow:
+            0 0 80px #000;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+    <!-- TOP BAR -->
+
+    <header class="topbar">
+
+        <div class="logo-area">
+
+            <div class="logo-circle">
+                🚁
+            </div>
+
+            <div class="logo-text">
+
+                <h1>SKYDRIVE</h1>
+
+                <p>
+                    SMART DRIVING SYSTEM
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="connection">
+
+            <span class="connection-dot"></span>
+
+            CONNECTED
+
+        </div>
+
+    </header>
+
+
+
+    <!-- MAP -->
+
+    <section class="map-container" id="map">
+
+        <div class="map-label label-one">
+            CENTRAL ROAD
+        </div>
+
+        <div class="map-label label-two">
+            PARKING ZONE
+        </div>
+
+        <div class="map-label label-three">
+            MAIN STREET
+        </div>
+
+
+        <div class="route-line" id="routeLine"></div>
+
+
+        <div class="car" id="car">
+            🚗
+        </div>
+
+
+        <div class="drone" id="drone">
+            🚁
+        </div>
+
+
+        <div class="traffic-marker" id="trafficMarker">
+            ⚠ TRAFFIC
+        </div>
+
+
+        <div class="parking-marker" id="parkingMarker">
+            P PARKING
+        </div>
+
+
+        <div class="scan-area">
+
+            <button
+                class="scan-button"
+                onclick="startScan()"
+            >
+                ✦ START DRONE SCAN
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- CONTENT -->
+
+    <main class="content">
+
+
+        <div class="greeting">
+
+            <h2>
+                Good morning
+            </h2>
+
+            <p>
+                Let's find the smartest route.
+            </p>
+
+        </div>
+
+
+
+        <!-- STATUS -->
+
+        <div class="status-card">
+
+            <div class="status-top">
+
+                <div class="status-title">
+                    SKYDRIVE STATUS
+                </div>
+
+                <div
+                    class="status-time"
+                    id="statusTime"
+                >
+                    READY
+                </div>
+
+            </div>
+
+
+            <div
+                class="status-message"
+                id="statusMessage"
+            >
+                Everything is ready.
+            </div>
+
+
+            <div
+                class="status-details"
+                id="statusDetails"
+            >
+                Start a drone scan to check traffic and parking.
+            </div>
+
+        </div>
+
+
+
+        <!-- FEATURES -->
+
+        <div class="section-title">
+            SMART FEATURES
+        </div>
+
+
+        <section class="features">
+
+
+            <div
+                class="feature"
+                onclick="checkTraffic()"
+            >
+
+                <div class="feature-icon">
+                    🚦
+                </div>
+
+                <h3>
+                    Traffic
+                </h3>
+
+                <p>
+                    Detect traffic ahead.
+                </p>
+
+            </div>
+
+
+
+            <div
+                class="feature"
+                onclick="findShortcut()"
+            >
+
+                <div class="feature-icon">
+                    🛣️
+                </div>
+
+                <h3>
+                    Shortcut
+                </h3>
+
+                <p>
+                    Find a faster route.
+                </p>
+
+            </div>
+
+
+
+            <div
+                class="feature"
+                onclick="findParking()"
+            >
+
+                <div class="feature-icon">
+                    🅿️
+                </div>
+
+                <h3>
+                    Parking
+                </h3>
+
+                <p>
+                    Find available parking.
+                </p>
+
+            </div>
+
+
+
+            <div
+                class="feature"
+                onclick="routeGuidance()"
+            >
+
+                <div class="feature-icon">
+                    🧭
+                </div>
+
+                <h3>
+                    Navigation
+                </h3>
+
+                <p>
+                    Follow the best route.
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- TIME SAVED -->
+
+        <div class="time-card">
+
+            <div>
+
+                <p>
+                    ESTIMATED TIME SAVED
+                </p>
+
+                <h2 id="timeSaved">
+                    -- min
+                </h2>
+
+            </div>
+
+
+            <div class="time-icon">
+                ⚡
+            </div>
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- BOTTOM NAV -->
+
+    <nav class="bottom-nav">
+
+        <div
+            class="nav-item active"
+            onclick="home()"
+        >
+
+            <div>
+                ◉
+            </div>
+
+            Home
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="scanNav()"
+        >
+
+            <div>
+                ◈
+            </div>
+
+            Scan
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="parkingNav()"
+        >
+
+            <div>
+                P
+            </div>
+
+            Parking
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="settings()"
+        >
+
+            <div>
+                ⚙
+            </div>
+
+            Settings
+
+        </div>
+
+    </nav>
+
+
+</div>
+
+
+<!-- TOAST -->
+
+<div
+    class="toast"
+    id="toast"
+>
+    SkyDrive
+</div>
+
+
+
+<script>
+
+/* =========================
+   BASIC FUNCTIONS
+========================= */
+
+function updateStatus(title, message) {
+
+    document.getElementById(
+        "statusMessage"
+    ).textContent = title;
+
+    document.getElementById(
+        "statusDetails"
+    ).textContent = message;
+
+    document.getElementById(
+        "statusTime"
+    ).textContent = "NOW";
+
+}
+
+
+function toast(message) {
+
+    const box =
+        document.getElementById("toast");
+
+    box.textContent = message;
+
+    box.classList.add("show");
+
+    setTimeout(function() {
+
+        box.classList.remove("show");
+
+    }, 2200);
+
+}
+
+
+function clearMapMarkers() {
+
+    document
+        .getElementById("trafficMarker")
+        .style.display = "none";
+
+    document
+        .getElementById("parkingMarker")
+        .style.display = "none";
+
+}
+
+
+/* =========================
+   DRONE SCAN
+========================= */
+
+function startScan() {
+
+    updateStatus(
+        "Drone is scanning...",
+        "SkyDrive is checking traffic and parking ahead."
+    );
+
+    toast(
+        "🚁 Drone scan started"
+    );
+
+    const drone =
+        document.getElementById("drone");
+
+    drone.style.animationDuration =
+        "0.6s";
+
+
+    setTimeout(function() {
+
+        clearMapMarkers();
+
+        document
+            .getElementById("trafficMarker")
+            .style.display = "block";
+
+
+        updateStatus(
+            "Traffic detected",
+            "Heavy traffic found ahead. SkyDrive found an alternate route."
+        );
+
+
+        document
+            .getElementById("timeSaved")
+            .textContent = "8 min";
+
+
+        toast(
+            "⚠ Traffic detected"
+        );
+
+
+        setTimeout(function() {
+
+            document
+                .getElementById("parkingMarker")
+                .style.display = "block";
+
+            updateStatus(
+                "Parking found",
+                "An available parking space was found near the destination."
+            );
+
+            toast(
+                "✓ Parking found"
+            );
+
+        }, 1300);
+
+
+    }, 1500);
+
+}
+
+
+/* =========================
+   TRAFFIC
+========================= */
+
+function checkTraffic() {
+
+    clearMapMarkers();
+
+    document
+        .getElementById("trafficMarker")
+        .style.display = "block";
+
+
+    updateStatus(
+        "Heavy traffic ahead",
+        "Traffic detected approximately 2.4 km ahead."
+    );
+
+
+    toast(
+        "🚦 Traffic detected"
+    );
+
+}
+
+
+/* =========================
+   SHORTCUT
+========================= */
+
+function findShortcut() {
+
+    clearMapMarkers();
+
+    const route =
+        document.getElementById("routeLine");
+
+    route.style.display = "block";
+
+
+    updateStatus(
+        "Smart shortcut found",
+        "SkyDrive found a route that can save approximately 8 minutes."
+    );
+
+
+    document
+        .getElementById("timeSaved")
+        .textContent = "8 min";
+
+
+    toast(
+        "🛣 Faster route found"
+    );
+
+}
+
+
+/* =========================
+   PARKING
+========================= */
+
+function findParking() {
+
+    clearMapMarkers();
+
+    document
+        .getElementById("parkingMarker")
+        .style.display = "block";
+
+
+    updateStatus(
+        "Parking available",
+        "SkyDrive found an available parking space near your destination."
+    );
+
+
+    toast(
+        "🅿 Parking space found"
+    );
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function routeGuidance() {
+
+    clearMapMarkers();
+
+    const route =
+        document.getElementById("routeLine");
+
+    route.style.display = "block";
+
+
+    updateStatus(
+        "Navigation active",
+        "Follow the blue route to avoid traffic and reach parking."
+    );
+
+
+    toast(
+        "🧭 Navigation started"
+    );
+
+}
+
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+function home() {
+
+    toast(
+        "⌂ Home"
+    );
+
+}
+
+
+function scanNav() {
+
+    startScan();
+
+}
+
+
+function parkingNav() {
+
+    findParking();
+
+}
+
+
+function settings() {
+
+    toast(
+        "⚙ Settings coming soon"
+    );
+
+}
+
+
+/* =========================
+   INITIAL MAP
+========================= */
+
+document
+    .getElementById("trafficMarker")
+    .style.display = "none";
+
+document
+    .getElementById("parkingMarker")
+    .style.display = "none";
+
+</script>
+
+
+</body>
+</html> <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SkyDrive</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #05080d;
+    color: white;
+    overflow-x: hidden;
+}
+
+/* =========================
+   APP
+========================= */
+
+.app {
+    max-width: 430px;
+    min-height: 100vh;
+    margin: auto;
+    background: #080d14;
+    position: relative;
+    padding-bottom: 90px;
+}
+
+/* =========================
+   TOP BAR
+========================= */
+
+.topbar {
+    height: 75px;
+    padding: 15px 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: rgba(8,13,20,0.95);
+    border-bottom: 1px solid #1c2b3a;
+
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-circle {
+    width: 43px;
+    height: 43px;
+
+    border-radius: 13px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #101c29;
+    border: 1px solid #258dce;
+
+    font-size: 22px;
+
+    box-shadow: 0 0 20px #1688ff33;
+}
+
+.logo-text h1 {
+    font-size: 19px;
+    letter-spacing: 2px;
+}
+
+.logo-text p {
+    font-size: 9px;
+    color: #71869a;
+    margin-top: 3px;
+}
+
+.connection {
+    font-size: 10px;
+    color: #4ee0a0;
+
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.connection-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #4ee0a0;
+    box-shadow: 0 0 8px #4ee0a0;
+}
+
+/* =========================
+   MAP
+========================= */
+
+.map-container {
+    height: 380px;
+    position: relative;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent 48%,
+            #1b2935 49%,
+            #1b2935 51%,
+            transparent 52%
+        ),
+        linear-gradient(
+            0deg,
+            transparent 48%,
+            #1b2935 49%,
+            #1b2935 51%,
+            transparent 52%
+        ),
+        #101821;
+}
+
+/* Extra map roads */
+
+.map-container::before {
+    content: "";
+    position: absolute;
+
+    width: 700px;
+    height: 18px;
+
+    background: #263746;
+
+    top: 170px;
+    left: -120px;
+
+    transform: rotate(-17deg);
+}
+
+.map-container::after {
+    content: "";
+    position: absolute;
+
+    width: 500px;
+    height: 15px;
+
+    background: #263746;
+
+    top: 250px;
+    left: -20px;
+
+    transform: rotate(30deg);
+}
+
+/* Map labels */
+
+.map-label {
+    position: absolute;
+
+    color: #65788a;
+    font-size: 10px;
+
+    letter-spacing: 1px;
+}
+
+.label-one {
+    top: 90px;
+    left: 35px;
+}
+
+.label-two {
+    top: 280px;
+    right: 25px;
+}
+
+.label-three {
+    top: 145px;
+    right: 30px;
+}
+
+/* Route */
+
+.route-line {
+    position: absolute;
+
+    width: 300px;
+    height: 6px;
+
+    background: #249cff;
+
+    box-shadow:
+        0 0 8px #249cff,
+        0 0 20px #249cff;
+
+    transform: rotate(-17deg);
+
+    top: 190px;
+    left: 70px;
+
+    border-radius: 20px;
+
+    z-index: 4;
+}
+
+/* Car */
+
+.car {
+    position: absolute;
+
+    left: 52%;
+    top: 182px;
+
+    transform: translate(-50%, -50%);
+
+    font-size: 35px;
+
+    z-index: 8;
+
+    filter: drop-shadow(0 0 10px #58baff);
+}
+
+/* Drone */
+
+.drone {
+    position: absolute;
+
+    right: 40px;
+    top: 65px;
+
+    font-size: 35px;
+
+    z-index: 8;
+
+    animation: droneFloat 2.5s infinite ease-in-out;
+
+    filter:
+        drop-shadow(0 0 8px #49baff)
+        drop-shadow(0 0 15px #1688ff);
+}
+
+@keyframes droneFloat {
+
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-9px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* Traffic marker */
+
+.traffic-marker {
+    position: absolute;
+
+    left: 30px;
+    top: 125px;
+
+    padding: 9px 12px;
+
+    background: #1b1115;
+
+    color: #ff6573;
+
+    border: 1px solid #ff6573;
+
+    border-radius: 9px;
+
+    font-size: 10px;
+
+    z-index: 10;
+
+    box-shadow: 0 0 15px #ff657333;
+}
+
+/* Parking marker */
+
+.parking-marker {
+    position: absolute;
+
+    right: 25px;
+    bottom: 45px;
+
+    padding: 9px 12px;
+
+    background: #0b1b17;
+
+    color: #45dca1;
+
+    border: 1px solid #45dca1;
+
+    border-radius: 9px;
+
+    font-size: 10px;
+
+    z-index: 10;
+
+    box-shadow: 0 0 15px #45dca133;
+}
+
+/* =========================
+   SCAN BUTTON
+========================= */
+
+.scan-area {
+    position: absolute;
+
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+
+    z-index: 12;
+}
+
+.scan-button {
+    width: 100%;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    background: #1688ff;
+
+    color: white;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 15px #1688ff55;
+
+    transition: 0.2s;
+}
+
+.scan-button:hover {
+    background: #35a0ff;
+}
+
+.scan-button:active {
+    transform: scale(0.98);
+}
+
+/* =========================
+   INFO PANEL
+========================= */
+
+.content {
+    padding: 20px;
+}
+
+.greeting {
+    margin-bottom: 18px;
+}
+
+.greeting h2 {
+    font-size: 22px;
+}
+
+.greeting p {
+    color: #77899a;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+/* Status card */
+
+.status-card {
+    background: #0e1721;
+
+    border: 1px solid #203548;
+
+    border-radius: 18px;
+
+    padding: 18px;
+
+    margin-bottom: 18px;
+}
+
+.status-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-title {
+    color: #65c2ff;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.status-time {
+    color: #75899b;
+    font-size: 11px;
+}
+
+.status-message {
+    font-size: 15px;
+    margin-top: 10px;
+}
+
+.status-details {
+    color: #8093a5;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+/* =========================
+   FEATURE CARDS
+========================= */
+
+.section-title {
+    font-size: 13px;
+    color: #8093a5;
+    margin-bottom: 12px;
+}
+
+.features {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+}
+
+.feature {
+    background: #0d151e;
+
+    border: 1px solid #1d3143;
+
+    border-radius: 16px;
+
+    padding: 17px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.feature:hover {
+    border-color: #258dce;
+    transform: translateY(-2px);
+}
+
+.feature-icon {
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.feature h3 {
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.feature p {
+    color: #718496;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+/* =========================
+   TIME SAVED
+========================= */
+
+.time-card {
+    margin-top: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0d1d2b,
+            #0a1119
+        );
+
+    border: 1px solid #214a67;
+
+    border-radius: 18px;
+
+    padding: 20px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.time-card p {
+    color: #8093a5;
+    font-size: 11px;
+}
+
+.time-card h2 {
+    margin-top: 5px;
+    font-size: 25px;
+    color: #58bdff;
+}
+
+.time-icon {
+    font-size: 35px;
+}
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+.bottom-nav {
+    position: fixed;
+
+    bottom: 0;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 100%;
+    max-width: 430px;
+
+    height: 75px;
+
+    background: #080d14;
+
+    border-top: 1px solid #1c2d3d;
+
+    display: flex;
+
+    justify-content: space-around;
+
+    align-items: center;
+
+    z-index: 30;
+}
+
+.nav-item {
+    color: #64788a;
+
+    font-size: 10px;
+
+    text-align: center;
+
+    cursor: pointer;
+}
+
+.nav-item div {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.nav-item.active {
+    color: #4bb7ff;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast {
+    position: fixed;
+
+    left: 50%;
+
+    bottom: 90px;
+
+    transform: translateX(-50%) translateY(20px);
+
+    background: #162332;
+
+    border: 1px solid #2c5875;
+
+    color: white;
+
+    padding: 12px 18px;
+
+    border-radius: 12px;
+
+    font-size: 12px;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition: 0.3s;
+
+    z-index: 100;
+
+    width: max-content;
+    max-width: 85%;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (min-width: 431px) {
+
+    body {
+        background:
+            radial-gradient(
+                circle at center,
+                #111d29,
+                #020407
+            );
+    }
+
+    .app {
+        box-shadow:
+            0 0 80px #000;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+    <!-- TOP BAR -->
+
+    <header class="topbar">
+
+        <div class="logo-area">
+
+            <div class="logo-circle">
+                🚁
+            </div>
+
+            <div class="logo-text">
+
+                <h1>SKYDRIVE</h1>
+
+                <p>
+                    SMART DRIVING SYSTEM
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="connection">
+
+            <span class="connection-dot"></span>
+
+            CONNECTED
+
+        </div>
+
+    </header>
+
+
+
+    <!-- MAP -->
+
+    <section class="map-container" id="map">
+
+        <div class="map-label label-one">
+            CENTRAL ROAD
+        </div>
+
+        <div class="map-label label-two">
+            PARKING ZONE
+        </div>
+
+        <div class="map-label label-three">
+            MAIN STREET
+        </div>
+
+
+        <div class="route-line" id="routeLine"></div>
+
+
+        <div class="car" id="car">
+            🚗
+        </div>
+
+
+        <div class="drone" id="drone">
+            🚁
+        </div>
+
+
+        <div class="traffic-marker" id="trafficMarker">
+            ⚠ TRAFFIC
+        </div>
+
+
+        <div class="parking-marker" id="parkingMarker">
+            P PARKING
+        </div>
+
+
+        <div class="scan-area">
+
+            <button
+                class="scan-button"
+                onclick="startScan()"
+            >
+                ✦ START DRONE SCAN
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- CONTENT -->
+
+    <main class="content">
+
+
+        <div class="greeting">
+
+            <h2>
+                Good morning
+            </h2>
+
+            <p>
+                Let's find the smartest route.
+            </p>
+
+        </div>
+
+
+
+        <!-- STATUS -->
+
+        <div class="status-card">
+
+            <div class="status-top">
+
+                <div class="status-title">
+                    SKYDRIVE STATUS
+                </div>
+
+                <div
+                    class="status-time"
+                    id="statusTime"
+                >
+                    READY
+                </div>
+
+            </div>
+
+
+            <div
+                class="status-message"
+                id="statusMessage"
+            >
+                Everything is ready.
+            </div>
+
+
+            <div
+                class="status-details"
+                id="statusDetails"
+            >
+                Start a drone scan to check traffic and parking.
+            </div>
+
+        </div>
+
+
+
+        <!-- FEATURES -->
+
+        <div class="section-title">
+            SMART FEATURES
+        </div>
+
+
+        <section class="features">
+
+
+            <div
+                class="feature"
+                onclick="checkTraffic()"
+            >
+
+                <div class="feature-icon">
+                    🚦
+                </div>
+
+                <h3>
+                    Traffic
+                </h3>
+
+                <p>
+                    Detect traffic ahead.
+                </p>
+
+            </div>
+
+
+
+            <div
+                class="feature"
+                onclick="findShortcut()"
+            >
+
+                <div class="feature-icon">
+                    🛣️
+                </div>
+
+                <h3>
+                    Shortcut
+                </h3>
+
+                <p>
+                    Find a faster route.
+                </p>
+
+            </div>
+
+
+
+            <div
+                class="feature"
+                onclick="findParking()"
+            >
+
+                <div class="feature-icon">
+                    🅿️
+                </div>
+
+                <h3>
+                    Parking
+                </h3>
+
+                <p>
+                    Find available parking.
+                </p>
+
+            </div>
+
+
+
+            <div
+                class="feature"
+                onclick="routeGuidance()"
+            >
+
+                <div class="feature-icon">
+                    🧭
+                </div>
+
+                <h3>
+                    Navigation
+                </h3>
+
+                <p>
+                    Follow the best route.
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- TIME SAVED -->
+
+        <div class="time-card">
+
+            <div>
+
+                <p>
+                    ESTIMATED TIME SAVED
+                </p>
+
+                <h2 id="timeSaved">
+                    -- min
+                </h2>
+
+            </div>
+
+
+            <div class="time-icon">
+                ⚡
+            </div>
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- BOTTOM NAV -->
+
+    <nav class="bottom-nav">
+
+        <div
+            class="nav-item active"
+            onclick="home()"
+        >
+
+            <div>
+                ◉
+            </div>
+
+            Home
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="scanNav()"
+        >
+
+            <div>
+                ◈
+            </div>
+
+            Scan
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="parkingNav()"
+        >
+
+            <div>
+                P
+            </div>
+
+            Parking
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="settings()"
+        >
+
+            <div>
+                ⚙
+            </div>
+
+            Settings
+
+        </div>
+
+    </nav>
+
+
+</div>
+
+
+<!-- TOAST -->
+
+<div
+    class="toast"
+    id="toast"
+>
+    SkyDrive
+</div>
+
+
+
+<script>
+
+/* =========================
+   BASIC FUNCTIONS
+========================= */
+
+function updateStatus(title, message) {
+
+    document.getElementById(
+        "statusMessage"
+    ).textContent = title;
+
+    document.getElementById(
+        "statusDetails"
+    ).textContent = message;
+
+    document.getElementById(
+        "statusTime"
+    ).textContent = "NOW";
+
+}
+
+
+function toast(message) {
+
+    const box =
+        document.getElementById("toast");
+
+    box.textContent = message;
+
+    box.classList.add("show");
+
+    setTimeout(function() {
+
+        box.classList.remove("show");
+
+    }, 2200);
+
+}
+
+
+function clearMapMarkers() {
+
+    document
+        .getElementById("trafficMarker")
+        .style.display = "none";
+
+    document
+        .getElementById("parkingMarker")
+        .style.display = "none";
+
+}
+
+
+/* =========================
+   DRONE SCAN
+========================= */
+
+function startScan() {
+
+    updateStatus(
+        "Drone is scanning...",
+        "SkyDrive is checking traffic and parking ahead."
+    );
+
+    toast(
+        "🚁 Drone scan started"
+    );
+
+    const drone =
+        document.getElementById("drone");
+
+    drone.style.animationDuration =
+        "0.6s";
+
+
+    setTimeout(function() {
+
+        clearMapMarkers();
+
+        document
+            .getElementById("trafficMarker")
+            .style.display = "block";
+
+
+        updateStatus(
+            "Traffic detected",
+            "Heavy traffic found ahead. SkyDrive found an alternate route."
+        );
+
+
+        document
+            .getElementById("timeSaved")
+            .textContent = "8 min";
+
+
+        toast(
+            "⚠ Traffic detected"
+        );
+
+
+        setTimeout(function() {
+
+            document
+                .getElementById("parkingMarker")
+                .style.display = "block";
+
+            updateStatus(
+                "Parking found",
+                "An available parking space was found near the destination."
+            );
+
+            toast(
+                "✓ Parking found"
+            );
+
+        }, 1300);
+
+
+    }, 1500);
+
+}
+
+
+/* =========================
+   TRAFFIC
+========================= */
+
+function checkTraffic() {
+
+    clearMapMarkers();
+
+    document
+        .getElementById("trafficMarker")
+        .style.display = "block";
+
+
+    updateStatus(
+        "Heavy traffic ahead",
+        "Traffic detected approximately 2.4 km ahead."
+    );
+
+
+    toast(
+        "🚦 Traffic detected"
+    );
+
+}
+
+
+/* =========================
+   SHORTCUT
+========================= */
+
+function findShortcut() {
+
+    clearMapMarkers();
+
+    const route =
+        document.getElementById("routeLine");
+
+    route.style.display = "block";
+
+
+    updateStatus(
+        "Smart shortcut found",
+        "SkyDrive found a route that can save approximately 8 minutes."
+    );
+
+
+    document
+        .getElementById("timeSaved")
+        .textContent = "8 min";
+
+
+    toast(
+        "🛣 Faster route found"
+    );
+
+}
+
+
+/* =========================
+   PARKING
+========================= */
+
+function findParking() {
+
+    clearMapMarkers();
+
+    document
+        .getElementById("parkingMarker")
+        .style.display = "block";
+
+
+    updateStatus(
+        "Parking available",
+        "SkyDrive found an available parking space near your destination."
+    );
+
+
+    toast(
+        "🅿 Parking space found"
+    );
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function routeGuidance() {
+
+    clearMapMarkers();
+
+    const route =
+        document.getElementById("routeLine");
+
+    route.style.display = "block";
+
+
+    updateStatus(
+        "Navigation active",
+        "Follow the blue route to avoid traffic and reach parking."
+    );
+
+
+    toast(
+        "🧭 Navigation started"
+    );
+
+}
+
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+function home() {
+
+    toast(
+        "⌂ Home"
+    );
+
+}
+
+
+function scanNav() {
+
+    startScan();
+
+}
+
+
+function parkingNav() {
+
+    findParking();
+
+}
+
+
+function settings() {
+
+    toast(
+        "⚙ Settings coming soon"
+    );
+
+}
+
+
+/* =========================
+   INITIAL MAP
+========================= */
+
+document
+    .getElementById("trafficMarker")
+    .style.display = "none";
+
+document
+    .getElementById("parkingMarker")
+    .style.display = "none";
+
+</script>
+
+
+</body>
+</html> <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SkyDrive</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #05080d;
+    color: white;
+    overflow-x: hidden;
+}
+
+/* =========================
+   APP
+========================= */
+
+.app {
+    max-width: 430px;
+    min-height: 100vh;
+    margin: auto;
+    background: #080d14;
+    position: relative;
+    padding-bottom: 90px;
+}
+
+/* =========================
+   TOP BAR
+========================= */
+
+.topbar {
+    height: 75px;
+    padding: 15px 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: rgba(8,13,20,0.95);
+    border-bottom: 1px solid #1c2b3a;
+
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-circle {
+    width: 43px;
+    height: 43px;
+
+    border-radius: 13px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #101c29;
+    border: 1px solid #258dce;
+
+    font-size: 22px;
+
+    box-shadow: 0 0 20px #1688ff33;
+}
+
+.logo-text h1 {
+    font-size: 19px;
+    letter-spacing: 2px;
+}
+
+.logo-text p {
+    font-size: 9px;
+    color: #71869a;
+    margin-top: 3px;
+}
+
+.connection {
+    font-size: 10px;
+    color: #4ee0a0;
+
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.connection-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #4ee0a0;
+    box-shadow: 0 0 8px #4ee0a0;
+}
+
+/* =========================
+   MAP
+========================= */
+
+.map-container {
+    height: 380px;
+    position: relative;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent 48%,
+            #1b2935 49%,
+            #1b2935 51%,
+            transparent 52%
+        ),
+        linear-gradient(
+            0deg,
+            transparent 48%,
+            #1b2935 49%,
+            #1b2935 51%,
+            transparent 52%
+        ),
+        #101821;
+}
+
+/* Extra map roads */
+
+.map-container::before {
+    content: "";
+    position: absolute;
+
+    width: 700px;
+    height: 18px;
+
+    background: #263746;
+
+    top: 170px;
+    left: -120px;
+
+    transform: rotate(-17deg);
+}
+
+.map-container::after {
+    content: "";
+    position: absolute;
+
+    width: 500px;
+    height: 15px;
+
+    background: #263746;
+
+    top: 250px;
+    left: -20px;
+
+    transform: rotate(30deg);
+}
+
+/* Map labels */
+
+.map-label {
+    position: absolute;
+
+    color: #65788a;
+    font-size: 10px;
+
+    letter-spacing: 1px;
+}
+
+.label-one {
+    top: 90px;
+    left: 35px;
+}
+
+.label-two {
+    top: 280px;
+    right: 25px;
+}
+
+.label-three {
+    top: 145px;
+    right: 30px;
+}
+
+/* Route */
+
+.route-line {
+    position: absolute;
+
+    width: 300px;
+    height: 6px;
+
+    background: #249cff;
+
+    box-shadow:
+        0 0 8px #249cff,
+        0 0 20px #249cff;
+
+    transform: rotate(-17deg);
+
+    top: 190px;
+    left: 70px;
+
+    border-radius: 20px;
+
+    z-index: 4;
+}
+
+/* Car */
+
+.car {
+    position: absolute;
+
+    left: 52%;
+    top: 182px;
+
+    transform: translate(-50%, -50%);
+
+    font-size: 35px;
+
+    z-index: 8;
+
+    filter: drop-shadow(0 0 10px #58baff);
+}
+
+/* Drone */
+
+.drone {
+    position: absolute;
+
+    right: 40px;
+    top: 65px;
+
+    font-size: 35px;
+
+    z-index: 8;
+
+    animation: droneFloat 2.5s infinite ease-in-out;
+
+    filter:
+        drop-shadow(0 0 8px #49baff)
+        drop-shadow(0 0 15px #1688ff);
+}
+
+@keyframes droneFloat {
+
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-9px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* Traffic marker */
+
+.traffic-marker {
+    position: absolute;
+
+    left: 30px;
+    top: 125px;
+
+    padding: 9px 12px;
+
+    background: #1b1115;
+
+    color: #ff6573;
+
+    border: 1px solid #ff6573;
+
+    border-radius: 9px;
+
+    font-size: 10px;
+
+    z-index: 10;
+
+    box-shadow: 0 0 15px #ff657333;
+}
+
+/* Parking marker */
+
+.parking-marker {
+    position: absolute;
+
+    right: 25px;
+    bottom: 45px;
+
+    padding: 9px 12px;
+
+    background: #0b1b17;
+
+    color: #45dca1;
+
+    border: 1px solid #45dca1;
+
+    border-radius: 9px;
+
+    font-size: 10px;
+
+    z-index: 10;
+
+    box-shadow: 0 0 15px #45dca133;
+}
+
+/* =========================
+   SCAN BUTTON
+========================= */
+
+.scan-area {
+    position: absolute;
+
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+
+    z-index: 12;
+}
+
+.scan-button {
+    width: 100%;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    background: #1688ff;
+
+    color: white;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 15px #1688ff55;
+
+    transition: 0.2s;
+}
+
+.scan-button:hover {
+    background: #35a0ff;
+}
+
+.scan-button:active {
+    transform: scale(0.98);
+}
+
+/* =========================
+   INFO PANEL
+========================= */
+
+.content {
+    padding: 20px;
+}
+
+.greeting {
+    margin-bottom: 18px;
+}
+
+.greeting h2 {
+    font-size: 22px;
+}
+
+.greeting p {
+    color: #77899a;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+/* Status card */
+
+.status-card {
+    background: #0e1721;
+
+    border: 1px solid #203548;
+
+    border-radius: 18px;
+
+    padding: 18px;
+
+    margin-bottom: 18px;
+}
+
+.status-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-title {
+    color: #65c2ff;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.status-time {
+    color: #75899b;
+    font-size: 11px;
+}
+
+.status-message {
+    font-size: 15px;
+    margin-top: 10px;
+}
+
+.status-details {
+    color: #8093a5;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+/* =========================
+   FEATURE CARDS
+========================= */
+
+.section-title {
+    font-size: 13px;
+    color: #8093a5;
+    margin-bottom: 12px;
+}
+
+.features {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+}
+
+.feature {
+    background: #0d151e;
+
+    border: 1px solid #1d3143;
+
+    border-radius: 16px;
+
+    padding: 17px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.feature:hover {
+    border-color: #258dce;
+    transform: translateY(-2px);
+}
+
+.feature-icon {
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.feature h3 {
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.feature p {
+    color: #718496;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+/* =========================
+   TIME SAVED
+========================= */
+
+.time-card {
+    margin-top: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0d1d2b,
+            #0a1119
+        );
+
+    border: 1px solid #214a67;
+
+    border-radius: 18px;
+
+    padding: 20px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.time-card p {
+    color: #8093a5;
+    font-size: 11px;
+}
+
+.time-card h2 {
+    margin-top: 5px;
+    font-size: 25px;
+    color: #58bdff;
+}
+
+.time-icon {
+    font-size: 35px;
+}
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+.bottom-nav {
+    position: fixed;
+
+    bottom: 0;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 100%;
+    max-width: 430px;
+
+    height: 75px;
+
+    background: #080d14;
+
+    border-top: 1px solid #1c2d3d;
+
+    display: flex;
+
+    justify-content: space-around;
+
+    align-items: center;
+
+    z-index: 30;
+}
+
+.nav-item {
+    color: #64788a;
+
+    font-size: 10px;
+
+    text-align: center;
+
+    cursor: pointer;
+}
+
+.nav-item div {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.nav-item.active {
+    color: #4bb7ff;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast {
+    position: fixed;
+
+    left: 50%;
+
+    bottom: 90px;
+
+    transform: translateX(-50%) translateY(20px);
+
+    background: #162332;
+
+    border: 1px solid #2c5875;
+
+    color: white;
+
+    padding: 12px 18px;
+
+    border-radius: 12px;
+
+    font-size: 12px;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition: 0.3s;
+
+    z-index: 100;
+
+    width: max-content;
+    max-width: 85%;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (min-width: 431px) {
+
+    body {
+        background:
+            radial-gradient(
+                circle at center,
+                #111d29,
+                #020407
+            );
+    }
+
+    .app {
+        box-shadow:
+            0 0 80px #000;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+    <!-- TOP BAR -->
+
+    <header class="topbar">
+
+        <div class="logo-area">
+
+            <div class="logo-circle">
+                🚁
+            </div>
+
+            <div class="logo-text">
+
+                <h1>SKYDRIVE</h1>
+
+                <p>
+                    SMART DRIVING SYSTEM
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="connection">
+
+            <span class="connection-dot"></span>
+
+            CONNECTED
+
+        </div>
+
+    </header>
+
+
+
+    <!-- MAP -->
+
+    <section class="map-container" id="map">
+
+        <div class="map-label label-one">
+            CENTRAL ROAD
+        </div>
+
+        <div class="map-label label-two">
+            PARKING ZONE
+        </div>
+
+        <div class="map-label label-three">
+            MAIN STREET
+        </div>
+
+
+        <div class="route-line" id="routeLine"></div>
+
+
+        <div class="car" id="car">
+            🚗
+        </div>
+
+
+        <div class="drone" id="drone">
+            🚁
+        </div>
+
+
+        <div class="traffic-marker" id="trafficMarker">
+            ⚠ TRAFFIC
+        </div>
+
+
+        <div class="parking-marker" id="parkingMarker">
+            P PARKING
+        </div>
+
+
+        <div class="scan-area">
+
+            <button
+                class="scan-button"
+                onclick="startScan()"
+            >
+                ✦ START DRONE SCAN
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- CONTENT -->
+
+    <main class="content">
+
+
+        <div class="greeting">
+
+            <h2>
+                Good morning
+            </h2>
+
+            <p>
+                Let's find the smartest route.
+            </p>
+
+        </div>
+
+
+
+        <!-- STATUS -->
+
+        <div class="status-card">
+
+            <div class="status-top">
+
+                <div class="status-title">
+                    SKYDRIVE STATUS
+                </div>
+
+                <div
+                    class="status-time"
+                    id="statusTime"
+                >
+                    READY
+                </div>
+
+            </div>
+
+
+            <div
+                class="status-message"
+                id="statusMessage"
+            >
+                Everything is ready.
+            </div>
+
+
+            <div
+                class="status-details"
+                id="statusDetails"
+            >
+                Start a drone scan to check traffic and parking.
+            </div>
+
+        </div>
+
+
+
+        <!-- FEATURES -->
+
+        <div class="section-title">
+            SMART FEATURES
+        </div>
+
+
+        <section class="features">
+
+
+            <div
+                class="feature"
+                onclick="checkTraffic()"
+            >
+
+                <div class="feature-icon">
+                    🚦
+                </div>
+
+                <h3>
+                    Traffic
+                </h3>
+
+                <p>
+                    Detect traffic ahead.
+                </p>
+
+            </div>
+
+
+
+            <div
+                class="feature"
+                onclick="findShortcut()"
+            >
+
+                <div class="feature-icon">
+                    🛣️
+                </div>
+
+                <h3>
+                    Shortcut
+                </h3>
+
+                <p>
+                    Find a faster route.
+                </p>
+
+            </div>
+
+
+
+            <div
+                class="feature"
+                onclick="findParking()"
+            >
+
+                <div class="feature-icon">
+                    🅿️
+                </div>
+
+                <h3>
+                    Parking
+                </h3>
+
+                <p>
+                    Find available parking.
+                </p>
+
+            </div>
+
+
+
+            <div
+                class="feature"
+                onclick="routeGuidance()"
+            >
+
+                <div class="feature-icon">
+                    🧭
+                </div>
+
+                <h3>
+                    Navigation
+                </h3>
+
+                <p>
+                    Follow the best route.
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- TIME SAVED -->
+
+        <div class="time-card">
+
+            <div>
+
+                <p>
+                    ESTIMATED TIME SAVED
+                </p>
+
+                <h2 id="timeSaved">
+                    -- min
+                </h2>
+
+            </div>
+
+
+            <div class="time-icon">
+                ⚡
+            </div>
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- BOTTOM NAV -->
+
+    <nav class="bottom-nav">
+
+        <div
+            class="nav-item active"
+            onclick="home()"
+        >
+
+            <div>
+                ◉
+            </div>
+
+            Home
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="scanNav()"
+        >
+
+            <div>
+                ◈
+            </div>
+
+            Scan
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="parkingNav()"
+        >
+
+            <div>
+                P
+            </div>
+
+            Parking
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="settings()"
+        >
+
+            <div>
+                ⚙
+            </div>
+
+            Settings
+
+        </div>
+
+    </nav>
+
+
+</div>
+
+
+<!-- TOAST -->
+
+<div
+    class="toast"
+    id="toast"
+>
+    SkyDrive
+</div>
+
+
+
+<script>
+
+/* =========================
+   BASIC FUNCTIONS
+========================= */
+
+function updateStatus(title, message) {
+
+    document.getElementById(
+        "statusMessage"
+    ).textContent = title;
+
+    document.getElementById(
+        "statusDetails"
+    ).textContent = message;
+
+    document.getElementById(
+        "statusTime"
+    ).textContent = "NOW";
+
+}
+
+
+function toast(message) {
+
+    const box =
+        document.getElementById("toast");
+
+    box.textContent = message;
+
+    box.classList.add("show");
+
+    setTimeout(function() {
+
+        box.classList.remove("show");
+
+    }, 2200);
+
+}
+
+
+function clearMapMarkers() {
+
+    document
+        .getElementById("trafficMarker")
+        .style.display = "none";
+
+    document
+        .getElementById("parkingMarker")
+        .style.display = "none";
+
+}
+
+
+/* =========================
+   DRONE SCAN
+========================= */
+
+function startScan() {
+
+    updateStatus(
+        "Drone is scanning...",
+        "SkyDrive is checking traffic and parking ahead."
+    );
+
+    toast(
+        "🚁 Drone scan started"
+    );
+
+    const drone =
+        document.getElementById("drone");
+
+    drone.style.animationDuration =
+        "0.6s";
+
+
+    setTimeout(function() {
+
+        clearMapMarkers();
+
+        document
+            .getElementById("trafficMarker")
+            .style.display = "block";
+
+
+        updateStatus(
+            "Traffic detected",
+            "Heavy traffic found ahead. SkyDrive found an alternate route."
+        );
+
+
+        document
+            .getElementById("timeSaved")
+            .textContent = "8 min";
+
+
+        toast(
+            "⚠ Traffic detected"
+        );
+
+
+        setTimeout(function() {
+
+            document
+                .getElementById("parkingMarker")
+                .style.display = "block";
+
+            updateStatus(
+                "Parking found",
+                "An available parking space was found near the destination."
+            );
+
+            toast(
+                "✓ Parking found"
+            );
+
+        }, 1300);
+
+
+    }, 1500);
+
+}
+
+
+/* =========================
+   TRAFFIC
+========================= */
+
+function checkTraffic() {
+
+    clearMapMarkers();
+
+    document
+        .getElementById("trafficMarker")
+        .style.display = "block";
+
+
+    updateStatus(
+        "Heavy traffic ahead",
+        "Traffic detected approximately 2.4 km ahead."
+    );
+
+
+    toast(
+        "🚦 Traffic detected"
+    );
+
+}
+
+
+/* =========================
+   SHORTCUT
+========================= */
+
+function findShortcut() {
+
+    clearMapMarkers();
+
+    const route =
+        document.getElementById("routeLine");
+
+    route.style.display = "block";
+
+
+    updateStatus(
+        "Smart shortcut found",
+        "SkyDrive found a route that can save approximately 8 minutes."
+    );
+
+
+    document
+        .getElementById("timeSaved")
+        .textContent = "8 min";
+
+
+    toast(
+        "🛣 Faster route found"
+    );
+
+}
+
+
+/* =========================
+   PARKING
+========================= */
+
+function findParking() {
+
+    clearMapMarkers();
+
+    document
+        .getElementById("parkingMarker")
+        .style.display = "block";
+
+
+    updateStatus(
+        "Parking available",
+        "SkyDrive found an available parking space near your destination."
+    );
+
+
+    toast(
+        "🅿 Parking space found"
+    );
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function routeGuidance() {
+
+    clearMapMarkers();
+
+    const route =
+        document.getElementById("routeLine");
+
+    route.style.display = "block";
+
+
+    updateStatus(
+        "Navigation active",
+        "Follow the blue route to avoid traffic and reach parking."
+    );
+
+
+    toast(
+        "🧭 Navigation started"
+    );
+
+}
+
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+function home() {
+
+    toast(
+        "⌂ Home"
+    );
+
+}
+
+
+function scanNav() {
+
+    startScan();
+
+}
+
+
+function parkingNav() {
+
+    findParking();
+
+}
+
+
+function settings() {
+
+    toast(
+        "⚙ Settings coming soon"
+    );
+
+}
+
+
+/* =========================
+   INITIAL MAP
+========================= */
+
+document
+    .getElementById("trafficMarker")
+    .style.display = "none";
+
+document
+    .getElementById("parkingMarker")
+    .style.display = "none";
+
+</script>
+
+
+</body>
+</html>
